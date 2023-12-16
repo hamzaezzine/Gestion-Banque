@@ -117,9 +117,6 @@ public class Login extends JFrame implements ActionListener {
 
                 if (resultSet.next()) {
                     int compte_id = resultSet.getInt("compte_id");
-
-                    System.out.println("Login successful");
-
                     new Home(compte_id).setVisible(true);
                     setVisible(false);
                 } 
