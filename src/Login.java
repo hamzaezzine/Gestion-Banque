@@ -94,8 +94,8 @@ public class Login extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == signup_btn) {    
-//            new Signup().setVisible(true);
-//            setVisible(false);
+            new Register().setVisible(true);
+            setVisible(false);
         }else if (e.getSource()==effacer_btn){  
             numCart_field.setText("");
             password_field.setText("");
