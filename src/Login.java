@@ -96,20 +96,42 @@ public class Login extends JFrame implements ActionListener {
         if (e.getSource() == signup_btn) {    
             new Register().setVisible(true);
             setVisible(false);
-        }else if (e.getSource()==effacer_btn){  
+        }
+        else if (e.getSource()==effacer_btn){  
             numCart_field.setText("");
             password_field.setText("");
         }
+        else if (e.getSource() == login_btn) {
+            String numCart = numCart_field.getText();
+            String pin = new String(password_field.getPassword());
 
-        try {
-
-            if (e.getSource()==login_btn){
-                System.out.println("login");
+            if (numCart.isEmpty() || pin.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Veuillez remplir tout les champs.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-        }
-        catch(Exception e1){
-            System.out.println("Error : " +e1);
-        }
+
+            try {
+                Conn connectionSQL = new Conn();
+                String loginQuery = "SELECT compte_id FROM carte WHERE numero = '" + numCart + "' AND pin = '" + pin + "'";
+                ResultSet resultSet = connectionSQL.statement.executeQuery(loginQuery);
+
+                if (resultSet.next()) {
+                    int compte_id = resultSet.getInt("compte_id");
+
+                    System.out.println("Login successful");
+
+                    new Home(compte_id).setVisible(true);
+                    setVisible(false);
+                } 
+                else {
+                    JOptionPane.showMessageDialog(this, "Authentification invalide.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } 
+            catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        }   
+        
     }
 
 

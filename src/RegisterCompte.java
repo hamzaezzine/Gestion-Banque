@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
+import java.sql.Statement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
@@ -7,14 +10,16 @@ import java.util.Calendar;
 import java.util.Random;
 
 public class RegisterCompte extends JFrame implements ActionListener {
+    Number client_id;
     JLabel title_label, dash_label, image_label,type_compte_label, numero_carte_label, date_expiration_label, pin_label;
     JButton next_btn;
     JTextField numero_carte_field, date_expiration_field, pin_field;
     JComboBox type_compte_combobox;
 
 
-    RegisterCompte() {
-
+    RegisterCompte(Number client_id) {
+        this.client_id = client_id;
+        
         setTitle("S'inscrire nouveau client");
 
 
@@ -111,21 +116,34 @@ public class RegisterCompte extends JFrame implements ActionListener {
         String pin = pin_field.getText();
 
 
-        System.out.println("type_compte: "+ type_compte);
-        System.out.println("numero_carte: "+ numero_carte);
-        System.out.println("date_expiration: "+ date_expiration);
-        System.out.println("pin: "+ pin);
-
-        try{
-
+        try {
             if (e.getSource() == next_btn) {
-                new Home(1).setVisible(true);
-                setVisible(false);
-            }
+                
+                if (type_compte_combobox.getSelectedItem() == null || numero_carte_field.getText().isEmpty() || date_expiration_field.getText().isEmpty() || pin_field.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Veuillez remplir tout les champs.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return; 
+                }
+                Conn connectionSQL = new Conn();
 
-        }
-        catch (Exception e1){
-            System.out.println(e1);
+                LocalDate currentDate = LocalDate.now();
+
+                String insertCompteQuery = "INSERT INTO compte (date_ouverture, solde, type_id, client_id) VALUES ('" + currentDate + "', 0, " + getTypeID(type_compte) + ", " + client_id + ")";
+                connectionSQL.statement.executeUpdate(insertCompteQuery, Statement.RETURN_GENERATED_KEYS);
+
+                ResultSet generatedKeys = connectionSQL.statement.getGeneratedKeys();
+                int compte_id = 0;
+                if (generatedKeys.next()) {
+                    compte_id = generatedKeys.getInt(1);
+
+                    String insertCarteQuery = "INSERT INTO carte (numero, date_expiration, pin, compte_id) VALUES ('" + numero_carte + "', '" + date_expiration + "', " + pin + ", " + compte_id + ")";
+                    connectionSQL.statement.executeUpdate(insertCarteQuery);
+
+                    new Home(compte_id).setVisible(true);
+                    setVisible(false);
+                }
+            }
+        } catch (Exception e1) {
+            e1.printStackTrace();
         }
 
     }
@@ -139,7 +157,8 @@ public class RegisterCompte extends JFrame implements ActionListener {
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, 2);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yyyy");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String expirationDate = dateFormat.format(calendar.getTime());
 
         String pin = String.format("%04d", random.nextInt(10000));
@@ -148,4 +167,18 @@ public class RegisterCompte extends JFrame implements ActionListener {
         date_expiration_field.setText(expirationDate);
         pin_field.setText(pin);
     }
+
+    
+    private int getTypeID(String type_compte) {
+        return switch (type_compte) {
+            case "Compte Courant" -> 1;
+            case "Compte Épargne" -> 2;
+            case "Compte Chèque" -> 3;
+            case "Compte Entreprise" -> 4;
+            case "Compte Jeune" -> 5;
+            case "Compte Étudiant" -> 6;
+            default -> 1;
+        };
+}
+
 }

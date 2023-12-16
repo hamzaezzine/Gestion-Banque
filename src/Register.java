@@ -1,4 +1,6 @@
 
+import java.sql.Statement;
+import java.sql.ResultSet;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -190,6 +192,7 @@ public class Register extends JFrame implements ActionListener {
         String prenom = prenom_field.getText();
         String date_naiss = date_naiss_field.getText();
         String email = email_field.getText();
+        String adresse = adresse_field.getText();
         String phone = phone_field.getText();
         String nationalite = nationalite_field.getText();
         String ville = ville_field.getText();
@@ -202,30 +205,39 @@ public class Register extends JFrame implements ActionListener {
             genre = "Femme";
         }
 
-        System.out.println("nom: "+ nom);
-        System.out.println("prenom: "+ prenom);
-        System.out.println("date_naiss: "+ date_naiss);
-        System.out.println("email: "+ email);
-        System.out.println("phone: "+ phone);
-        System.out.println("nationalite: "+ nationalite);
-        System.out.println("ville: "+ ville);
-        System.out.println("code_postal: "+ code_postal);
-        System.out.println("genre: "+ genre);
 
-        try{
-
+        try {
             if (e.getSource() == next_btn) {
-                new RegisterCompte().setVisible(true);
-                setVisible(false);
+                
+                if (nom.isEmpty() || prenom.isEmpty() || date_naiss.isEmpty() || email.isEmpty() || adresse.isEmpty() || phone.isEmpty() || nationalite.isEmpty() || ville.isEmpty() || code_postal.isEmpty() || genre == null) {
+                    JOptionPane.showMessageDialog(this, "Veuillez remplir tout les champs.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return; 
+                }
+                Conn connectionSQL = new Conn();
+                String new_client_query = "insert into client (nom, prenom, genre, date_naissance_, adresse, email, code_postal, ville, nationalite, numero_telephone) values ('" + nom + "','" + prenom + "','" + genre + "','" + date_naiss + "','" + adresse + "','" + email + "','" + code_postal + "','" + ville + "','" + nationalite + "','" + phone + "')";
+
+                int affectedRows = connectionSQL.statement.executeUpdate(new_client_query, Statement.RETURN_GENERATED_KEYS);
+
+                // Check if the insertion was successful
+                if (affectedRows > 0) {
+                    ResultSet generatedKeys = connectionSQL.statement.getGeneratedKeys();
+
+                    if (generatedKeys.next()) {
+                        int clientId = generatedKeys.getInt(1);
+
+                        new RegisterCompte(clientId).setVisible(true);
+                        setVisible(false);
+                    }
+                }
             }
-            if (e.getSource() == retour_btn){
+            if (e.getSource() == retour_btn) {
                 new Login().setVisible(true);
                 setVisible(false);
             }
+        } catch (Exception e1) {
+            e1.printStackTrace();
         }
-        catch (Exception e1){
-            System.out.println(e1);
-        }
+
 
     }
 
