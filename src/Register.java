@@ -215,7 +215,7 @@ public class Register extends JFrame implements ActionListener {
         try{
 
             if (e.getSource() == next_btn) {
-                new Home(1).setVisible(true);
+                new RegisterCompte().setVisible(true);
                 setVisible(false);
             }
             if (e.getSource() == retour_btn){
