@@ -4,15 +4,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Home extends JFrame implements ActionListener {
-    Number client_id;
+    Number compte_id;
 
     JLabel image_label, image_bg_label, title_label, dash_label;
     JButton retrait_btn, depot_btn,  transfert_btn, solde_btn, operations_btn, pin_btn, sortie_btn;
     String pin;
 
-    Home(Number client_id){
-        this.client_id = client_id;
-        System.out.println(client_id);
+    Home(Number compte_id){
+        this.compte_id = compte_id;
+        System.out.println(compte_id);
         
 
         setTitle("Accueil");
@@ -40,7 +40,7 @@ public class Home extends JFrame implements ActionListener {
         add(title_label);
 
         dash_label = new JLabel("__________________________________");
-        dash_label.setForeground(new Color(149, 136, 248));
+        dash_label.setForeground(new Color(245, 174, 82));
         dash_label.setFont(new Font("Raleway", Font.PLAIN, 30));
         dash_label.setBounds(100, 0, 700, 100);
         add(dash_label);
@@ -95,7 +95,7 @@ public class Home extends JFrame implements ActionListener {
         add(pin_btn);
 
         sortie_btn = new JButton("SORTIE");
-        sortie_btn.setBackground(new Color(149, 136, 248));
+        sortie_btn.setBackground(new Color(245, 174, 82));
         sortie_btn.setForeground(Color.WHITE);
         sortie_btn.setFont(new Font("Arial", Font.BOLD, 20));
         sortie_btn.setBounds(390, 460, 250, 40);
@@ -105,7 +105,7 @@ public class Home extends JFrame implements ActionListener {
 
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
-        setLocation(400, 70);
+        setLocation(200, 70);
         setSize(700, 600);
         setVisible(true);
        
@@ -114,16 +114,21 @@ public class Home extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==retrait_btn){     
-            System.out.println("retrait_btn");
+            new Retrait(compte_id).setVisible(true);
+            setVisible(false);
         }
         else if (e.getSource() == depot_btn) {
-            System.out.println("depot_btn");
+            new Depot(compte_id).setVisible(true);
+            setVisible(false);        
         }
         else if (e.getSource() == transfert_btn) {
-            System.out.println("transfert_btn");
+            new Transfert(compte_id).setVisible(true);
+            setVisible(false);  
+           
         }
         else if (e.getSource() == solde_btn) {
-            System.out.println("solde_btn");
+            new Solde(compte_id).setVisible(true);
+            setVisible(false);  
 
         }
         else if (e.getSource() == operations_btn) {
