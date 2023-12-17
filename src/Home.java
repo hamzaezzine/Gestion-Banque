@@ -7,7 +7,7 @@ public class Home extends JFrame implements ActionListener {
     Number compte_id;
 
     JLabel image_label, image_bg_label, title_label, dash_label;
-    JButton retrait_btn, depot_btn,  transfert_btn, solde_btn, operations_btn, pin_btn, sortie_btn;
+    JButton retrait_btn, depot_btn,  transfert_btn, solde_btn, operations_btn, compte_btn, sortie_btn;
     String pin;
 
     Home(Number compte_id){
@@ -86,13 +86,13 @@ public class Home extends JFrame implements ActionListener {
         operations_btn.addActionListener(this);
         add(operations_btn);
 
-        pin_btn = new JButton("MODIFIER PIN");
-        pin_btn.setBackground(new Color(149, 136, 248));
-        pin_btn.setForeground(Color.WHITE);
-        pin_btn.setFont(new Font("Arial", Font.BOLD, 20));
-        pin_btn.setBounds(390, 400, 250, 40);
-        pin_btn.addActionListener(this);
-        add(pin_btn);
+        compte_btn = new JButton("COMPTE");
+        compte_btn.setBackground(new Color(149, 136, 248));
+        compte_btn.setForeground(Color.WHITE);
+        compte_btn.setFont(new Font("Arial", Font.BOLD, 20));
+        compte_btn.setBounds(390, 400, 250, 40);
+        compte_btn.addActionListener(this);
+        add(compte_btn);
 
         sortie_btn = new JButton("SORTIE");
         sortie_btn.setBackground(new Color(245, 174, 82));
@@ -129,13 +129,14 @@ public class Home extends JFrame implements ActionListener {
         else if (e.getSource() == solde_btn) {
             new Solde(compte_id).setVisible(true);
             setVisible(false);  
-
         }
         else if (e.getSource() == operations_btn) {
-            System.out.println("operations_btn");
+            new Operations(compte_id).setVisible(true);
+            setVisible(false);  
         }
-        else if (e.getSource() == pin_btn) {        
-            System.out.println("pin_btn");
+        else if (e.getSource() == compte_btn) {        
+            new Compte(compte_id).setVisible(true);
+            setVisible(false);  
         }
         else if (e.getSource()==sortie_btn){
             System.exit(0);
