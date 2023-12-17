@@ -100,7 +100,7 @@ public class RegisterCompte extends JFrame implements ActionListener {
         pin_field.setBounds(290, 245, 330, 25);
         add(pin_field);
         
-        generateRandomCardInfo();
+        genererInfosCarteAleatoires();
         
         setLayout(null);
         setLocation(200, 20);
@@ -127,7 +127,7 @@ public class RegisterCompte extends JFrame implements ActionListener {
 
                 LocalDate currentDate = LocalDate.now();
 
-                String insertCompteQuery = "INSERT INTO compte (date_ouverture, solde, type_id, client_id) VALUES ('" + currentDate + "', 0, " + getTypeID(type_compte) + ", " + client_id + ")";
+                String insertCompteQuery = "INSERT INTO compte (date_ouverture, solde, type_id, client_id) VALUES ('" + currentDate + "', 0, " + obtenirIdTypeCompte(type_compte) + ", " + client_id + ")";
                 connectionSQL.statement.executeUpdate(insertCompteQuery, Statement.RETURN_GENERATED_KEYS);
 
                 ResultSet generatedKeys = connectionSQL.statement.getGeneratedKeys();
@@ -148,7 +148,7 @@ public class RegisterCompte extends JFrame implements ActionListener {
 
     }
     
-    private void generateRandomCardInfo() {
+    private void genererInfosCarteAleatoires() {
         Random random = new Random();
         StringBuilder cardNumber = new StringBuilder("4"); 
         for (int i = 0; i < 15; i++) {
@@ -169,7 +169,7 @@ public class RegisterCompte extends JFrame implements ActionListener {
     }
 
     
-    private int getTypeID(String type_compte) {
+    private int obtenirIdTypeCompte(String type_compte) {
         return switch (type_compte) {
             case "Compte Courant" -> 1;
             case "Compte Épargne" -> 2;

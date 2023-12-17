@@ -2,18 +2,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.sql.PreparedStatement;
 
 public class Depot extends JFrame implements ActionListener  {
-    Number client_id;
+    Number compte_id;
     JLabel title_label, image_label, montant_label, dash_label;
     JTextField montant_field;
     JButton retour_btn, depot_btn;
 
 
-    Depot(Number client_id){
-        this.client_id = client_id;
-        System.out.println(client_id);
+    Depot(Number compte_id){
+        this.compte_id = compte_id;
+        System.out.println(compte_id);
 
 
         setTitle("Dépôt d'espèces");
@@ -79,11 +79,48 @@ public class Depot extends JFrame implements ActionListener  {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==retour_btn){     
-            new Home(client_id).setVisible(true);
+            new Home(compte_id).setVisible(true);
             setVisible(false);
         }
         else if (e.getSource() == depot_btn) {
-            System.out.println("depot_btn");
+            String montantStr = montant_field.getText();
+
+            if (!montantStr.isEmpty()) {
+                try {
+                    double montant = Double.parseDouble(montantStr);
+                    ajouterSolde(compte_id.intValue(), montant);
+                    JOptionPane.showMessageDialog(this, "Dépôt réussi!");
+                } 
+                catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Montant non valide, entrez un nombre valide.");
+                }
+            } 
+            else {
+                JOptionPane.showMessageDialog(this, "Veuillez saisir un montant de dépôt.");
+            }
+        }
+    }
+    
+    
+    private void ajouterSolde(int compteId, double depositAmount) {
+        try {
+            Conn connection = new Conn();
+            String updateQuery = "UPDATE compte SET solde = solde + ? WHERE compte_id = ?";
+            PreparedStatement preparedStatement = connection.connection.prepareStatement(updateQuery);
+            preparedStatement.setDouble(1, depositAmount);
+            preparedStatement.setInt(2, compteId);
+            preparedStatement.executeUpdate();
+
+            String insertOperationQuery = "INSERT INTO operation (date_operation, time_operation, libelle, montant, type_id, compte_id) VALUES (CURDATE(), CURTIME(), 'dépôt d''espèces', ?, 1, ?)";
+            PreparedStatement insertOperationStatement = connection.connection.prepareStatement(insertOperationQuery);
+            insertOperationStatement.setDouble(1, depositAmount);
+            insertOperationStatement.setInt(2, compteId);
+            insertOperationStatement.executeUpdate();
+            
+            connection.connection.close();
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "An error occurred while updating the database.");
         }
     }
 

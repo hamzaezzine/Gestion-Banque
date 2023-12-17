@@ -2,10 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 
 public class Solde extends JFrame implements ActionListener{
     Number client_id;
-    JLabel title_label, image_label, montant_label, dash_label;
+    JLabel title_label, image_label, montant_label, dash_label, solde_label;
     JButton retour_btn;
 
 
@@ -43,7 +46,11 @@ public class Solde extends JFrame implements ActionListener{
         montant_label.setBounds(150, 105, 600, 50);
         add(montant_label);
 
-
+        solde_label = new JLabel();
+        solde_label.setFont(new Font("Arial", Font.BOLD, 20));
+        solde_label.setBounds(150, 160, 390, 30);
+        add(solde_label);
+        
         retour_btn = new JButton("RETOUR");
         retour_btn.setBackground(new Color(245, 174, 82));
         retour_btn.setForeground(Color.WHITE);
@@ -53,6 +60,7 @@ public class Solde extends JFrame implements ActionListener{
         add(retour_btn);
 
 
+        afficherSolde();
 
 
         getContentPane().setBackground(Color.WHITE);
@@ -67,6 +75,27 @@ public class Solde extends JFrame implements ActionListener{
         if (e.getSource()==retour_btn){     
             new Home(client_id).setVisible(true);
             setVisible(false);
+        }
+    }
+    
+    private void afficherSolde() {
+        try {
+            Conn connection = new Conn();
+            String query = "SELECT solde FROM compte WHERE compte_id = ?";
+            PreparedStatement preparedStatement = connection.connection.prepareStatement(query);
+            preparedStatement.setInt(1, client_id.intValue());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                double solde = resultSet.getDouble("solde");
+                solde_label.setText(String.format("%.2f DH", solde));
+            }
+
+            connection.connection.close();
+        } 
+        catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "An error occurred while fetching the solde.");
         }
     }
 }

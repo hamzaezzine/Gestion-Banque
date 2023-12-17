@@ -3,9 +3,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.table.DefaultTableModel;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 
 public class Operations extends JFrame implements ActionListener {
-    Number client_id;
+    Number compte_id;
     JLabel title_label, image_label, dash_label;
     JButton retour_btn;
     DefaultTableModel tableModel;
@@ -13,10 +16,8 @@ public class Operations extends JFrame implements ActionListener {
     JScrollPane sp;
 
 
-    Operations(Number client_id){
-        this.client_id = client_id;
-        System.out.println(client_id);
-
+    Operations(Number compte_id){
+        this.compte_id = compte_id;
 
         setTitle("Operations");
 
@@ -34,49 +35,21 @@ public class Operations extends JFrame implements ActionListener {
         title_label.setBounds(100, 0, 600, 90);
         add(title_label);
 
-        dash_label = new JLabel("__________________________________");
+        dash_label = new JLabel("__________________________________________________");
         dash_label.setForeground(new Color(245, 174, 82));
         dash_label.setFont(new Font("Raleway", Font.PLAIN, 30));
-        dash_label.setBounds(100, 0, 700, 100);
+        dash_label.setBounds(100, 0, 1200, 100);
         add(dash_label);
 
 
-        String[] columnNames = new String[]{"ID", "Montant","Type", "Date", "Libellé", "id du destinataire", "Compte du destinataire"};
+        String[] columnNames = new String[]{"ID Operation", "Montant","Type", "Date", "Time","Libellé", "ID Destinataire"};
         tableModel = new DefaultTableModel(columnNames, 0);
         tableau = new JTable(tableModel);
 
-        //ajouter des ligne dans le tableau
-        tableModel.addRow(new Object[] { "1", "340", "Virement", "12/14/2002","transfer", "QWERT Rachid"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        tableModel.addRow(new Object[] { "M1349141", "kamal", "Alaoui", "12/14/2002","aa.@gmail", "Homme"});
-        
+        trouverOperations();
+                
         sp = new JScrollPane(tableau);
-        sp.setSize(620, 370);
+        sp.setSize(920, 370);
         sp.setLocation(30,100);
         add(sp);
         
@@ -92,15 +65,54 @@ public class Operations extends JFrame implements ActionListener {
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         setLocation(100, 70);
-        setSize(700, 600);
+        setSize(1000, 600);
         setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==retour_btn){     
-            new Home(client_id).setVisible(true);
+            new Home(compte_id).setVisible(true);
             setVisible(false);
         }
     }
+    
+    private void trouverOperations() {
+        try {
+            Conn connection = new Conn();
+            String query = "SELECT operation_id, montant, type_id, date_operation, time_operation, libelle, destinataire_id FROM operation WHERE compte_id = " + compte_id;
+            PreparedStatement preparedStatement = connection.connection.prepareStatement(query);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int operationId = resultSet.getInt("operation_id");
+                String montant = resultSet.getString("montant");
+                int typeId = resultSet.getInt("type_id");
+                String type = recupererLibelleTypeOperation(typeId);
+                String date = resultSet.getString("date_operation");
+                String time = resultSet.getString("time_operation");
+                String libelle = resultSet.getString("libelle");
+                int idDestinataire = resultSet.getInt("destinataire_id");
+
+                tableModel.addRow(new Object[]{operationId, montant, type, date, time, libelle, idDestinataire});
+            }
+            connection.connection.close();
+
+        } 
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String recupererLibelleTypeOperation(int typeId) {
+        return switch (typeId) {
+            case 1 -> "Dépôt";
+            case 2 -> "Retrait";
+            case 3 -> "Virement";
+            default -> "Unknown Type";
+        };
+    }
+
+
 }

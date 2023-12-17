@@ -4,17 +4,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Compte extends JFrame implements ActionListener {
-    Number client_id;
+    Number compte_id;
     JLabel title_label, image_label, montant_label, dash_label;
     JButton retour_btn;
 
 
-    Compte(Number client_id){
-        this.client_id = client_id;
-        System.out.println(client_id);
+    Compte(Number compte_id){
+        this.compte_id = compte_id;
 
-
-        setTitle("Operations");
+        setTitle("Compte");
 
         ImageIcon imageIcon4 = new ImageIcon(ClassLoader.getSystemResource("images/login.png"));
         Image imageIcon5 = imageIcon4.getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT);
@@ -65,7 +63,7 @@ public class Compte extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==retour_btn){     
-            new Home(client_id).setVisible(true);
+            new Home(compte_id).setVisible(true);
             setVisible(false);
         }
     }

@@ -16,9 +16,7 @@ public class Register extends JFrame implements ActionListener {
 
 
     Register() {
-
         setTitle("S'inscrire nouveau client");
-
 
         ImageIcon imageIcon1 = new ImageIcon(ClassLoader.getSystemResource("images/login.png"));
         Image imageIcon2 = imageIcon1.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
@@ -175,15 +173,12 @@ public class Register extends JFrame implements ActionListener {
         code_postal_field.setBounds(290, 487, 330, 25);
         add(code_postal_field);
 
-
-
         getContentPane().setBackground(Color.WHITE);
 
         setLayout(null);
         setLocation(200, 20);
         setSize(700, 630);
         setVisible(true);
-
     }
 
     @Override
@@ -205,7 +200,6 @@ public class Register extends JFrame implements ActionListener {
             genre = "Femme";
         }
 
-
         try {
             if (e.getSource() == next_btn) {
                 
@@ -218,7 +212,6 @@ public class Register extends JFrame implements ActionListener {
 
                 int affectedRows = connectionSQL.statement.executeUpdate(new_client_query, Statement.RETURN_GENERATED_KEYS);
 
-                // Check if the insertion was successful
                 if (affectedRows > 0) {
                     ResultSet generatedKeys = connectionSQL.statement.getGeneratedKeys();
 

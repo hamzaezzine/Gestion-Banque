@@ -2,16 +2,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
 
 public class Retrait extends JFrame implements ActionListener {
-    Number client_id;
+    Number compte_id;
     JLabel image_label, title_label, dash_label;
     JButton btn_100, btn_200, btn_300, btn_400, btn_500, btn_600, btn_700, btn_800, btn_900, btn_1000, retour_btn, autre_btn;
-    String pin;
 
-    Retrait(Number client_id){
-        this.client_id = client_id;
-        System.out.println(client_id);
+    Retrait(Number compte_id){
+        this.compte_id = compte_id;
+        System.out.println(compte_id);
         
 
         setTitle("Retrait");
@@ -165,45 +165,104 @@ public class Retrait extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource()==btn_100){     
-            System.out.println("btn_100");
-        }
-        else if (e.getSource() == btn_200) {
-            System.out.println("btn_200");
-        }
-        else if (e.getSource() == btn_300) {
-            System.out.println("btn_300");
-        }
-        else if (e.getSource() == btn_400) {
-            System.out.println("btn_400");
-
-        }
-        else if (e.getSource() == btn_500) {
-            System.out.println("btn_500");
-        }
-        else if (e.getSource() == btn_600) {
-            System.out.println("btn_600");
-        }
-        else if (e.getSource() == btn_700) {
-            System.out.println("btn_700");
-        }
-        else if (e.getSource() == btn_800) {
-            System.out.println("btn_800");
-
-        }
-        else if (e.getSource() == btn_900) {
-            System.out.println("btn_900");
-        }
-        else if (e.getSource() == btn_1000) {
-            System.out.println("btn_1000");
-        }
-        else if (e.getSource() == retour_btn) {        
-            new Home(client_id).setVisible(true);
+        if (e.getSource() == btn_100 || e.getSource() == btn_200 || e.getSource() == btn_300 ||
+            e.getSource() == btn_400 || e.getSource() == btn_500 || e.getSource() == btn_600 ||
+            e.getSource() == btn_700 || e.getSource() == btn_800 || e.getSource() == btn_900 ||
+            e.getSource() == btn_1000) {
+            retraitFixe(e);
+        } 
+        else if (e.getSource() == autre_btn) {
+            retraitPersonnalise();
+        } 
+        else if (e.getSource() == retour_btn) {
+            new Home(compte_id).setVisible(true);
             setVisible(false);
         }
-        else if (e.getSource()==autre_btn){
-            System.out.println("autre_btn");
+}
+
+    private void retraitFixe(ActionEvent e) {
+        JButton clickedButton = (JButton) e.getSource();
+        String buttonText = clickedButton.getText();
+
+        String amountStr = buttonText.replaceAll("[^0-9]", "");
+
+        try {
+            double withdrawalAmount = Double.parseDouble(amountStr);
+            if (estSoldeSuffisant(withdrawalAmount)) {
+                retirerDuSolde(compte_id.intValue(), withdrawalAmount);
+                JOptionPane.showMessageDialog(this, "Retrait de " + withdrawalAmount + " DH réussi!");
+            } 
+            else {
+                JOptionPane.showMessageDialog(this, "Solde insuffisant pour le retrait de " + withdrawalAmount + " DH.");
+            }
+        } 
+        catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Erreur de conversion du montant de retrait.");
         }
     }
-    
+
+    private void retraitPersonnalise() {
+        String customAmountStr = JOptionPane.showInputDialog(this, "Veuillez saisir le montant de retrait :");
+
+        if (customAmountStr != null && !customAmountStr.isEmpty()) {
+            try {
+                double customWithdrawalAmount = Double.parseDouble(customAmountStr);
+                if (estSoldeSuffisant(customWithdrawalAmount)) {
+                    retirerDuSolde(compte_id.intValue(), customWithdrawalAmount);
+                    JOptionPane.showMessageDialog(this, "Retrait de " + customWithdrawalAmount + " DH réussi!");
+                } 
+                else {
+                    JOptionPane.showMessageDialog(this, "Solde insuffisant pour le retrait de " + customWithdrawalAmount + " DH.");
+                }
+            } 
+            catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Montant de retrait non valide. Veuillez saisir un nombre valide.");
+            }
+        }
+    }
+
+    private boolean estSoldeSuffisant(double withdrawalAmount) {
+        try {
+            Conn connection = new Conn();
+            String query = "SELECT solde FROM compte WHERE compte_id = ?";
+            PreparedStatement preparedStatement = connection.connection.prepareStatement(query);
+            preparedStatement.setInt(1, compte_id.intValue());
+
+            var resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                double currentBalance = resultSet.getDouble("solde");
+                return currentBalance >= withdrawalAmount;
+            }
+            connection.connection.close();
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "An error occurred while checking the balance.");
+        }
+        return false;
+    }
+
+    private void retirerDuSolde(int compteId, double withdrawalAmount) {
+        try {
+            Conn connection = new Conn();
+            
+            String updateCompteQuery = "UPDATE compte SET solde = solde - ? WHERE compte_id = ?";
+            PreparedStatement updateCompteStatement = connection.connection.prepareStatement(updateCompteQuery);
+            updateCompteStatement.setDouble(1, withdrawalAmount);
+            updateCompteStatement.setInt(2, compteId);
+            updateCompteStatement.executeUpdate();
+
+            String insertOperationQuery = "INSERT INTO operation (date_operation, time_operation, libelle, montant, type_id, compte_id) VALUES (CURDATE(), CURTIME(), 'retrait d''espèces', ?, 2, ?)";
+            PreparedStatement insertOperationStatement = connection.connection.prepareStatement(insertOperationQuery);
+            insertOperationStatement.setDouble(1, withdrawalAmount);
+            insertOperationStatement.setInt(2, compteId);
+            insertOperationStatement.executeUpdate();
+
+            connection.connection.close();
+        } 
+        catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "An error occurred while updating the database.");
+        }
+    }
+
 }
