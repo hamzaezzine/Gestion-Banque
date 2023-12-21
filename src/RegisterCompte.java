@@ -178,6 +178,6 @@ public class RegisterCompte extends JFrame implements ActionListener {
             case "Compte Étudiant" -> 6;
             default -> 1;
         };
-}
+    }   
 
 }

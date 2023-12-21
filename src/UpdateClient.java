@@ -1,5 +1,4 @@
-
-import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.*;
 import java.awt.*;
@@ -7,16 +6,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class Register extends JFrame implements ActionListener {
-
+public class UpdateClient extends JFrame implements ActionListener {
+    Number compte_id;
     JLabel title_label, dash_label, image_label,nom_label, prenom_label, date_naiss_label, genre_label, adresse_label,email_label, phone_label, nationalite_label, ville_label, code_postal_label;
-    JButton next_btn, retour_btn;
+    JButton update_btn, retour_btn;
     JTextField nom_field, prenom_field, date_naiss_field, adresse_field,email_field, phone_field, nationalite_field, ville_field, code_postal_field;
     JRadioButton male, female;
 
 
-    Register() {
-        setTitle("S'inscrire nouveau client");
+    UpdateClient(Number compte_id) {
+        this.compte_id = compte_id;
+        setTitle("Modifier Client Informations");
 
         ImageIcon imageIcon1 = new ImageIcon(ClassLoader.getSystemResource("images/login.png"));
         Image imageIcon2 = imageIcon1.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
@@ -26,14 +26,14 @@ public class Register extends JFrame implements ActionListener {
         add(image_label);
 
 
-        title_label = new JLabel("S'inscrire nouveau client ");
+        title_label = new JLabel("Modifier Client Informations");
         title_label.setForeground(new Color(149, 136, 248));
         title_label.setFont(new Font("Oswald", Font.BOLD, 27));
-        title_label.setBounds(140, 0, 600, 90);
+        title_label.setBounds(90, 0, 600, 90);
         add(title_label);
 
         dash_label = new JLabel("______________________________");
-        dash_label.setForeground(new Color(149, 136, 248));
+        dash_label.setForeground(new Color(245, 174, 82));
         dash_label.setFont(new Font("Raleway", Font.PLAIN, 30));
         dash_label.setBounds(90, 0, 600, 100);
         add(dash_label);
@@ -92,19 +92,19 @@ public class Register extends JFrame implements ActionListener {
         
         
         // Buttons :
-        next_btn = new JButton("Suivant");
-        next_btn.setBackground(new Color(149, 136, 248));
-        next_btn.setForeground(Color.WHITE);
-        next_btn.setFont(new Font("Arial", Font.BOLD, 15));
-        next_btn.setBounds(510, 530, 110, 30);
-        next_btn.addActionListener(this);
-        add(next_btn);
+        update_btn = new JButton("Modifier");
+        update_btn.setBackground(new Color(149, 136, 248));
+        update_btn.setForeground(Color.WHITE);
+        update_btn.setFont(new Font("Arial", Font.BOLD, 15));
+        update_btn.setBounds(510, 530, 110, 40);
+        update_btn.addActionListener(this);
+        add(update_btn);
 
         retour_btn = new JButton("Retour");
-        retour_btn.setBackground(new Color(149, 136, 248));
+        retour_btn.setBackground(new Color(245, 174, 82));
         retour_btn.setForeground(Color.WHITE);
         retour_btn.setFont(new Font("Arial", Font.BOLD, 15));
-        retour_btn.setBounds(70, 530, 110, 30);
+        retour_btn.setBounds(70, 530, 110, 40);
         retour_btn.addActionListener(this);
         add(retour_btn);
 
@@ -173,10 +173,40 @@ public class Register extends JFrame implements ActionListener {
         code_postal_field.setBounds(290, 487, 330, 25);
         add(code_postal_field);
 
+        try {
+            String query = "SELECT * FROM client WHERE client_id = (SELECT client_id FROM compte WHERE compte_id = ?)";
+            PreparedStatement preparedStatement = new Conn().connection.prepareStatement(query);
+            preparedStatement.setInt(1, compte_id.intValue());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                nom_field.setText(resultSet.getString("nom"));
+                prenom_field.setText(resultSet.getString("prenom"));
+                date_naiss_field.setText(resultSet.getString("date_naissance_"));
+                adresse_field.setText(resultSet.getString("adresse"));
+                email_field.setText(resultSet.getString("email"));
+                phone_field.setText(resultSet.getString("numero_telephone"));
+                nationalite_field.setText(resultSet.getString("nationalite"));
+                ville_field.setText(resultSet.getString("ville"));
+                code_postal_field.setText(resultSet.getString("code_postal"));
+
+                String genre = resultSet.getString("genre");
+                if ("Homme".equals(genre)) {
+                    male.setSelected(true);
+                } 
+                else if ("Femme".equals(genre)) {
+                    female.setSelected(true);
+                }
+            }
+        } 
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
         getContentPane().setBackground(Color.WHITE);
 
         setLayout(null);
-        setLocation(200, 20);
+        setLocation(200, 50);
         setSize(700, 630);
         setVisible(true);
     }
@@ -201,37 +231,42 @@ public class Register extends JFrame implements ActionListener {
         }
 
         try {
-            if (e.getSource() == next_btn) {
-                
+            if (e.getSource() == update_btn) {
                 if (nom.isEmpty() || prenom.isEmpty() || date_naiss.isEmpty() || email.isEmpty() || adresse.isEmpty() || phone.isEmpty() || nationalite.isEmpty() || ville.isEmpty() || code_postal.isEmpty() || genre == null) {
-                    JOptionPane.showMessageDialog(this, "Veuillez remplir tout les champs.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs obligatoires.", "Erreur", JOptionPane.ERROR_MESSAGE);
                     return; 
                 }
-                Conn connectionSQL = new Conn();
-                String new_client_query = "insert into client (nom, prenom, genre, date_naissance_, adresse, email, code_postal, ville, nationalite, numero_telephone) values ('" + nom + "','" + prenom + "','" + genre + "','" + date_naiss + "','" + adresse + "','" + email + "','" + code_postal + "','" + ville + "','" + nationalite + "','" + phone + "')";
 
-                int affectedRows = connectionSQL.statement.executeUpdate(new_client_query, Statement.RETURN_GENERATED_KEYS);
+                String updateQuery = "UPDATE client SET nom=?, prenom=?, date_naissance_=?, genre=?, adresse=?, email=?, numero_telephone=?, nationalite=?, ville=?, code_postal=? WHERE client_id=(SELECT client_id FROM compte WHERE compte_id = ?)";
+                PreparedStatement updateStatement = new Conn().connection.prepareStatement(updateQuery);
+                updateStatement.setString(1, nom);
+                updateStatement.setString(2, prenom);
+                updateStatement.setString(3, date_naiss);
+                updateStatement.setString(4, genre);
+                updateStatement.setString(5, adresse);
+                updateStatement.setString(6, email);
+                updateStatement.setString(7, phone);
+                updateStatement.setString(8, nationalite);
+                updateStatement.setString(9, ville);
+                updateStatement.setString(10, code_postal);
+                updateStatement.setInt(11, compte_id.intValue());
 
-                if (affectedRows > 0) {
-                    ResultSet generatedKeys = connectionSQL.statement.getGeneratedKeys();
-
-                    if (generatedKeys.next()) {
-                        int clientId = generatedKeys.getInt(1);
-
-                        new RegisterCompte(clientId).setVisible(true);
-                        setVisible(false);
-                    }
+                int rowsAffected = updateStatement.executeUpdate();
+                if (rowsAffected > 0) {
+                    JOptionPane.showMessageDialog(this, "Les informations du client ont été mises à jour avec succès !", "Success", JOptionPane.INFORMATION_MESSAGE);
+                } 
+                else {
+                    JOptionPane.showMessageDialog(this, "Échec de la mise à jour des informations du client.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
             if (e.getSource() == retour_btn) {
-                new Login().setVisible(true);
+                new Compte(compte_id).setVisible(true);
                 setVisible(false);
             }
-        } catch (Exception e1) {
+        } 
+        catch (Exception e1) {
             e1.printStackTrace();
         }
-
-
     }
 
 }
