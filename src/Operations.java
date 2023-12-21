@@ -18,7 +18,6 @@ public class Operations extends JFrame implements ActionListener {
 
     Operations(Number compte_id){
         this.compte_id = compte_id;
-
         setTitle("Operations");
 
         ImageIcon imageIcon4 = new ImageIcon(ClassLoader.getSystemResource("images/login.png"));

@@ -19,7 +19,6 @@ public class RegisterCompte extends JFrame implements ActionListener {
 
     RegisterCompte(Number client_id) {
         this.client_id = client_id;
-        
         setTitle("S'inscrire nouveau client");
 
 

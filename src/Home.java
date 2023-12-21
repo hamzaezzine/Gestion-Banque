@@ -12,9 +12,6 @@ public class Home extends JFrame implements ActionListener {
 
     Home(Number compte_id){
         this.compte_id = compte_id;
-        System.out.println(compte_id);
-        
-
         setTitle("Accueil");
 
         ImageIcon imageIcon1 = new ImageIcon(ClassLoader.getSystemResource("images/home.png"));

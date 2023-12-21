@@ -11,7 +11,6 @@ public class Compte extends JFrame implements ActionListener {
 
     Compte(Number compte_id){
         this.compte_id = compte_id;
-
         setTitle("Compte");
 
         ImageIcon imageIcon4 = new ImageIcon(ClassLoader.getSystemResource("images/login.png"));

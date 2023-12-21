@@ -13,8 +13,6 @@ public class Depot extends JFrame implements ActionListener  {
 
     Depot(Number compte_id){
         this.compte_id = compte_id;
-        System.out.println(compte_id);
-
 
         setTitle("Dépôt d'espèces");
 
@@ -88,8 +86,13 @@ public class Depot extends JFrame implements ActionListener  {
             if (!montantStr.isEmpty()) {
                 try {
                     double montant = Double.parseDouble(montantStr);
-                    ajouterSolde(compte_id.intValue(), montant);
-                    JOptionPane.showMessageDialog(this, "Dépôt réussi!");
+                    if (montant <= 0) {
+                        JOptionPane.showMessageDialog(this, "Le montant est invalide.");
+                    } 
+                    else{
+                        ajouterSolde(compte_id.intValue(), montant);
+                        JOptionPane.showMessageDialog(this, "Dépôt réussi!");
+                    }
                 } 
                 catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(this, "Montant non valide, entrez un nombre valide.");

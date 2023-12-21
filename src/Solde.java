@@ -14,9 +14,6 @@ public class Solde extends JFrame implements ActionListener{
 
     Solde(Number client_id){
         this.client_id = client_id;
-        System.out.println(client_id);
-
-
         setTitle("Solde");
 
         ImageIcon imageIcon4 = new ImageIcon(ClassLoader.getSystemResource("images/login.png"));

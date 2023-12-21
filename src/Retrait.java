@@ -11,9 +11,6 @@ public class Retrait extends JFrame implements ActionListener {
 
     Retrait(Number compte_id){
         this.compte_id = compte_id;
-        System.out.println(compte_id);
-        
-
         setTitle("Retrait");
 
 
@@ -207,7 +204,10 @@ public class Retrait extends JFrame implements ActionListener {
         if (customAmountStr != null && !customAmountStr.isEmpty()) {
             try {
                 double customWithdrawalAmount = Double.parseDouble(customAmountStr);
-                if (estSoldeSuffisant(customWithdrawalAmount)) {
+                if (customWithdrawalAmount <= 0) {
+                    JOptionPane.showMessageDialog(this, "Le montant est invalide.");
+                } 
+                else if (estSoldeSuffisant(customWithdrawalAmount)) {
                     retirerDuSolde(compte_id.intValue(), customWithdrawalAmount);
                     JOptionPane.showMessageDialog(this, "Retrait de " + customWithdrawalAmount + " DH réussi!");
                 } 
