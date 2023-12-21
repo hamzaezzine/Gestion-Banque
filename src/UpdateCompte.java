@@ -111,7 +111,7 @@ public class UpdateCompte extends JFrame implements ActionListener {
             PreparedStatement preparedStatement = connectionSQL.connection.prepareStatement(query);
             preparedStatement.setInt(1, compte_id.intValue());
             ResultSet resultSet = preparedStatement.executeQuery();
-
+            System.out.println(query);
             if (resultSet.next()) {
                 String typeCompte = resultSet.getString("type_compte");
                 type_compte_combobox.setSelectedItem("Compte "+typeCompte);
@@ -121,6 +121,8 @@ public class UpdateCompte extends JFrame implements ActionListener {
                 date_expiration_field.setText(dateExpiration);
                 String pin = resultSet.getString("pin");
                 pin_field.setText(pin);
+                
+                System.out.println(pin);
             }
 
         } 

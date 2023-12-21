@@ -29,11 +29,11 @@ public class Register extends JFrame implements ActionListener {
         title_label = new JLabel("S'inscrire nouveau client ");
         title_label.setForeground(new Color(149, 136, 248));
         title_label.setFont(new Font("Oswald", Font.BOLD, 27));
-        title_label.setBounds(140, 0, 600, 90);
+        title_label.setBounds(90, 0, 600, 90);
         add(title_label);
 
         dash_label = new JLabel("______________________________");
-        dash_label.setForeground(new Color(149, 136, 248));
+        dash_label.setForeground(new Color(245, 174, 82));
         dash_label.setFont(new Font("Raleway", Font.PLAIN, 30));
         dash_label.setBounds(90, 0, 600, 100);
         add(dash_label);
@@ -101,7 +101,7 @@ public class Register extends JFrame implements ActionListener {
         add(next_btn);
 
         retour_btn = new JButton("Retour");
-        retour_btn.setBackground(new Color(149, 136, 248));
+        retour_btn.setBackground(new Color(245, 174, 82));
         retour_btn.setForeground(Color.WHITE);
         retour_btn.setFont(new Font("Arial", Font.BOLD, 15));
         retour_btn.setBounds(70, 530, 110, 30);

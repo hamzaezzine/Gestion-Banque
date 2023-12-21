@@ -33,11 +33,11 @@ public class RegisterCompte extends JFrame implements ActionListener {
         title_label = new JLabel("S'inscrire nouveau client ");
         title_label.setForeground(new Color(149, 136, 248));
         title_label.setFont(new Font("Oswald", Font.BOLD, 27));
-        title_label.setBounds(140, 0, 600, 90);
+        title_label.setBounds(90, 0, 600, 90);
         add(title_label);
 
         dash_label = new JLabel("______________________________");
-        dash_label.setForeground(new Color(149, 136, 248));
+        dash_label.setForeground(new Color(245, 174, 82));
         dash_label.setFont(new Font("Raleway", Font.PLAIN, 30));
         dash_label.setBounds(90, 0, 600, 100);
         add(dash_label);
@@ -100,7 +100,7 @@ public class RegisterCompte extends JFrame implements ActionListener {
         add(pin_field);
         
         genererInfosCarteAleatoires();
-        
+        getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         setLocation(200, 20);
         setSize(700, 400);
