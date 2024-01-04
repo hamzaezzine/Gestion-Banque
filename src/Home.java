@@ -99,6 +99,8 @@ public class Home extends JFrame implements ActionListener {
         sortie_btn.addActionListener(this);
         add(sortie_btn);
 
+        ImageIcon appIcon = new ImageIcon(ClassLoader.getSystemResource("images/appicon.png"));
+        setIconImage(appIcon.getImage());
 
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);

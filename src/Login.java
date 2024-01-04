@@ -81,7 +81,9 @@ public class Login extends JFrame implements ActionListener {
         signup_btn.addActionListener(this);
         add(signup_btn);
 
-
+        ImageIcon appIcon = new ImageIcon(ClassLoader.getSystemResource("images/appicon.png"));
+        setIconImage(appIcon.getImage());
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         setLocation(200, 150);

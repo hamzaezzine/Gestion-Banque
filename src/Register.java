@@ -174,6 +174,9 @@ public class Register extends JFrame implements ActionListener {
         add(code_postal_field);
 
         getContentPane().setBackground(Color.WHITE);
+        
+        ImageIcon appIcon = new ImageIcon(ClassLoader.getSystemResource("images/appicon.png"));
+        setIconImage(appIcon.getImage());
 
         setLayout(null);
         setLocation(200, 20);

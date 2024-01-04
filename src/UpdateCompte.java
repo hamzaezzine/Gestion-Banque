@@ -130,6 +130,9 @@ public class UpdateCompte extends JFrame implements ActionListener {
             e.printStackTrace();
         }
         
+        ImageIcon appIcon = new ImageIcon(ClassLoader.getSystemResource("images/appicon.png"));
+        setIconImage(appIcon.getImage());
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         setLocation(200, 70);

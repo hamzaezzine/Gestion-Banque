@@ -151,7 +151,9 @@ public class Retrait extends JFrame implements ActionListener {
         autre_btn.addActionListener(this);
         add(autre_btn);
 
-
+        ImageIcon appIcon = new ImageIcon(ClassLoader.getSystemResource("images/appicon.png"));
+        setIconImage(appIcon.getImage());
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         setLocation(200, 70);

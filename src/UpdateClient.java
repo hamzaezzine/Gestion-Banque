@@ -204,6 +204,9 @@ public class UpdateClient extends JFrame implements ActionListener {
         }
 
         getContentPane().setBackground(Color.WHITE);
+        
+        ImageIcon appIcon = new ImageIcon(ClassLoader.getSystemResource("images/appicon.png"));
+        setIconImage(appIcon.getImage());
 
         setLayout(null);
         setLocation(200, 50);

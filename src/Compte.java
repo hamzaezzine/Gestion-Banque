@@ -60,7 +60,9 @@ public class Compte extends JFrame implements ActionListener {
         retour_btn.addActionListener(this);
         add(retour_btn);
 
-
+        ImageIcon appIcon = new ImageIcon(ClassLoader.getSystemResource("images/appicon.png"));
+        setIconImage(appIcon.getImage());
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         setLocation(200, 70);

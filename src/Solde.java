@@ -59,6 +59,8 @@ public class Solde extends JFrame implements ActionListener{
 
         afficherSolde();
 
+        ImageIcon appIcon = new ImageIcon(ClassLoader.getSystemResource("images/appicon.png"));
+        setIconImage(appIcon.getImage());
 
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);

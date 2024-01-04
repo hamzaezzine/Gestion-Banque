@@ -80,6 +80,9 @@ public class Transfert extends JFrame implements ActionListener {
         transfert_btn.setBounds(380, 340, 160, 40);
         transfert_btn.addActionListener(this);
         add(transfert_btn);
+        
+        ImageIcon appIcon = new ImageIcon(ClassLoader.getSystemResource("images/appicon.png"));
+        setIconImage(appIcon.getImage());
 
 
         getContentPane().setBackground(Color.WHITE);

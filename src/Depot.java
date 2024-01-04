@@ -65,7 +65,8 @@ public class Depot extends JFrame implements ActionListener  {
         depot_btn.addActionListener(this);
         add(depot_btn);
 
-
+        ImageIcon appIcon = new ImageIcon(ClassLoader.getSystemResource("images/appicon.png"));
+        setIconImage(appIcon.getImage());
 
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
