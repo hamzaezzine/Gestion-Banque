@@ -25,7 +25,7 @@ public class Depot extends JFrame implements ActionListener  {
 
 
 
-        title_label = new JLabel("Retrait");
+        title_label = new JLabel("Depot");
         title_label.setForeground(new Color(149, 136, 248));
         title_label.setFont(new Font("Oswald", Font.BOLD, 22));
         title_label.setBounds(100, 0, 600, 90);
